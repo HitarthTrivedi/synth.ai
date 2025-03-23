@@ -17,7 +17,7 @@ load_dotenv()
 # Configure the Gemini API
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    api_key = "AIzaSyBk7Zhi2wdgVXXgR_KBnuXp9dW5RKmP1Lo"  # Use the key from your code if not in .env
+    api_key = "Enter your gemini api key here"  # Use the key from your code if not in .env
     logger.warning("Using hardcoded API key. Consider using a .env file for security.")
 
 genai.configure(api_key=api_key)
