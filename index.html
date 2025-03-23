@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNTH.AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SYNTH.<span class="highlight">AI</span></h1>
+            <p class="tagline">Get personalized Bollywood music recommendations based on your mood</p>
+        </header>
+
+        <div class="mood-form">
+            <div class="form-section">
+                <h2>Tell me about your day</h2>
+                <div class="form-group">
+                    <label for="time_of_day">How's your day going?</label>
+                    <select id="time_of_day" name="time_of_day">
+                        <option value="">-- Select --</option>
+                        <option value="morning">Just started my day</option>
+                        <option value="good day">Having a good day</option>
+                        <option value="okay day">It's okay</option>
+                        <option value="bad day">Not so great</option>
+                        <option value="evening">Winding down</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="highlight">What was the highlight of your day?</label>
+                    <input type="text" id="highlight" name="highlight" placeholder="Tell me what made your day special...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Your Current Mood</h2>
+                <div class="form-group">
+                    <label for="romantic_mood">Feeling romantic or thinking about someone special?</label>
+                    <input type="text" id="romantic_mood" name="romantic_mood" placeholder="Share your feelings...">
+                </div>
+
+                <div class="form-group">
+                    <label for="present_moment">How would you describe this moment?</label>
+                    <input type="text" id="present_moment" name="present_moment" placeholder="Excited, relaxed, anxious...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Your Music Preferences</h2>
+                <div class="form-group">
+                    <label for="current_activity">What are you doing right now?</label>
+                    <input type="text" id="current_activity" name="current_activity" placeholder="Working, chilling, exercising...">
+                </div>
+
+                <div class="form-group">
+                    <label for="favorite_artist">Any favorite Bollywood artists?</label>
+                    <input type="text" id="favorite_artist" name="favorite_artist" placeholder="Arijit Singh, A.R. Rahman...">
+                </div>
+
+                <div class="form-group">
+                    <label for="specific_genre">Any specific genre or era you prefer?</label>
+                    <input type="text" id="specific_genre" name="specific_genre" placeholder="90s, Romantic, Party...">
+                </div>
+            </div>
+
+            <button id="submit-btn" class="pulse-btn">Get Your Playlist</button>
+        </div>
+
+        <div class="response-container hidden" id="response-container">
+            <div class="loader" id="loader">
+                <div class="turntable">
+                    <div class="record"></div>
+                    <div class="tonearm"></div>
+                </div>
+                <p>DJ is mixing your playlist...</p>
+            </div>
+            <h2>Your Personalized Playlist</h2>
+            <div id="dj-response"></div>
+            <button id="new-playlist-btn">Create Another Playlist</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>SYNTH.AI &copy; 2025 | Powered by ALPHA.KORE using Gemini AI</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
