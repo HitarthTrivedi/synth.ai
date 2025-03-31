@@ -6,6 +6,7 @@
     <title>SYNTH.AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -15,6 +16,17 @@
             </div>
             <h1>SYNTH.<span class="highlight">AI</span></h1>
             <p class="tagline">Get personalized Bollywood music recommendations based on your mood</p>
+            <div class="spotify-login-container">
+                {% if 'token_info' in session %}
+                    <button class="spotify-button spotify-connected">
+                        <i class="fab fa-spotify"></i> Connected to Spotify
+                    </button>
+                {% else %}
+                    <a href="{{ spotify_auth_url }}" class="spotify-button">
+                        <i class="fab fa-spotify"></i> Connect with Spotify
+                    </a>
+                {% endif %}
+            </div>
             <div class="audio-wave">
                 <span></span>
                 <span></span>
@@ -99,7 +111,26 @@
                 <p>DJ is mixing your playlist...</p>
             </div>
             <h2>Your Personalized Playlist</h2>
+
+            <!-- DJ Text Response -->
             <div id="dj-response"></div>
+
+            <!-- Spotify Tracks Container -->
+            <div id="spotify-tracks-container" class="spotify-tracks-container">
+                <div class="spotify-header">
+                    <i class="fab fa-spotify"></i> Play on Spotify
+                </div>
+                <div id="spotify-tracks-list" class="spotify-tracks-list">
+                    <!-- Spotify tracks will be added here dynamically -->
+                </div>
+                <div id="spotify-not-connected" class="spotify-not-connected hidden">
+                    <p>Connect with Spotify to play these songs directly!</p>
+                    <a href="{{ spotify_auth_url }}" class="spotify-button">
+                        <i class="fab fa-spotify"></i> Connect Now
+                    </a>
+                </div>
+            </div>
+
             <button id="new-playlist-btn">Create Another Playlist</button>
             <div class="audio-wave">
                 <span></span>
@@ -113,8 +144,34 @@
         </div>
     </div>
 
+    <!-- Spotify Player Modal -->
+    <div id="player-modal" class="player-modal hidden">
+        <div class="player-container">
+            <div class="player-header">
+                <h3>Now Playing</h3>
+                <button id="close-player" class="close-button"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="player-content">
+                <div class="album-art">
+                    <img id="track-image" src="" alt="Album Art">
+                </div>
+                <div class="track-info">
+                    <h4 id="track-name"></h4>
+                    <p id="track-artist"></p>
+                    <p id="track-album"></p>
+                </div>
+                <div class="player-controls">
+                    <div id="spotify-embed"></div>
+                    <a id="open-in-spotify" href="#" target="_blank" class="spotify-external-link">
+                        <i class="fab fa-spotify"></i> Open in Spotify
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
-        <p>SYNTH.AI &copy; 2025 | Powered by ALPHA.KORE using Gemini AI</p>
+        <p>SYNTH.AI &copy; 2025 | Powered by ALPHA.KORE using Gemini AI & Spotify</p>
     </footer>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
