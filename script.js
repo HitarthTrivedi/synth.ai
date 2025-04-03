@@ -125,14 +125,14 @@ function initializeApp() {
 
             if (songRegex.test(line)) {
                 line = line.replace(songRegex,
-                    '<div class="song-item">🎵 <strong>$2</strong> by <em>$3</em></div>'
+                    '🎵 $2 by $3 '
                 );
             } else {
                 // Original regex for legacy format
                 let originalSongRegex = /(\d+[\.\)\s]+)([^-\–\—\by]+)([-\–\—\s]+|by\s+|feat\.\s+)([^,:.!?\n]+)/i;
                 if (originalSongRegex.test(line)) {
                     line = line.replace(originalSongRegex,
-                        '<div class="song-item">🎵 <strong>$2</strong>$3<em>$4</em></div>'
+                        '🎵 $2 $3 $4'
                     );
                 }
             }
@@ -140,7 +140,7 @@ function initializeApp() {
             // Handle playlist headings
             if (/\b(playlist|tracklist|tracks|songs|recommendations|vibes)[:!\s]/i.test(line)) {
                 line = line.replace(/\b(playlist|tracklist|tracks|songs|recommendations|vibes)[:!\s]/i,
-                    '<div class="playlist-heading">$1:</div>'
+                    ' $1: '
                 );
             }
 
@@ -148,7 +148,7 @@ function initializeApp() {
             if (/\b(yo|hey|sup|wassup|hello|hi|check|listen|enjoy|vibe)/i.test(line) &&
                 line.length < 150 &&
                 !songRegex.test(line)) {
-                line = '<div class="dj-message">' + line + '</div>';
+                line = 'dj-message:' + line ;
             }
 
             formattedLines.push(line);
