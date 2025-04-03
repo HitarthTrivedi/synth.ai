@@ -21,15 +21,15 @@ load_dotenv()
 # Configure the Gemini API
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    api_key = "gemini_api_key"  # Use the key from your code if not in .env
+    api_key = "AIzaSyBk7Zhi2wdgVXXgR_KBnuXp9dW5RKmP1Lo"  # Use the key from your code if not in .env
     logger.warning("Using hardcoded API key. Consider using a .env file for security.")
 
 genai.configure(api_key=api_key)
 
 # Spotify Configuration
-SPOTIFY_CLIENT_ID = "spotify_client_key"
-SPOTIFY_CLIENT_SECRET = "client_secret_key"
-SPOTIFY_REDIRECT_URI = "redirect_url"
+SPOTIFY_CLIENT_ID = "f989c6cee8fa443cb3ea026c401bcd1e"
+SPOTIFY_CLIENT_SECRET = "5a5c3eb0b5e945c1804b00763fc78759"
+SPOTIFY_REDIRECT_URI = "http://127.0.0.1:5000/callback"
 SPOTIFY_SCOPE = "user-read-private user-read-email streaming user-modify-playback-state"
 
 
@@ -92,6 +92,9 @@ def get_gemini_response(user_data):
 def extract_songs_from_response(response):
     songs = []
     logger.info(f"Raw AI response to extract from: {response}")
+
+    # Remove HTML tags from the response
+    response = re.sub(r'<[^>]+>', '', response)
 
     # Primary pattern: "Song Name | Artist Name" format
     pattern = r'([^|\n]+)\s*\|\s*([^|\n]+)'
