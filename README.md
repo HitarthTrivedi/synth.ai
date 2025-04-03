@@ -71,10 +71,11 @@ synth-ai/
 2. The application sends this information to the Flask backend
 3. Gemini AI processes the input and generates a personalized playlist
 4. The playlist is returned and displayed with animated formatting
+5. If its connected to spotify, it can even help you play the songs on it.
 
 ## 🔮 Future Enhancements
 
-- Integration with Spotify/YouTube APIs for direct playback
+- Integration with YouTube APIs for direct playback
 - User accounts to save favorite playlists
 - Expanded genre coverage beyond Bollywood
 - Mobile application version
