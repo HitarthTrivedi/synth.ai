@@ -23,7 +23,7 @@ A personalized Bollywood music recommendation web application that curates playl
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/synth-ai.git
+   git clone https://github.com/HitarthTrivedi/synth-ai.git
    cd synth-ai
    ```
 
