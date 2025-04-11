@@ -56,7 +56,7 @@ synth-ai/
 │   └── js/
 │       └── script.js
 ├── templates/
-│   └── index.html
+│   └── index.html,landing.html
 ├── app.py
 ├── requirements.txt
 ├── .env
