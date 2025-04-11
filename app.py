@@ -224,7 +224,7 @@ def landing():
     return render_template('landing.html')
 
 @app.route('/synth')
-def index():
+def synth():
     return render_template('index.html', spotify_auth_url=create_spotify_oauth().get_authorize_url())
 
 
