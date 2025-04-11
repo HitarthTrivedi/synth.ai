@@ -29,7 +29,7 @@ genai.configure(api_key=api_key)
 # Spotify Configuration
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-SPOTIFY_REDIRECT_URI = "http://127.0.0.1:5000/synth/callback"
+SPOTIFY_REDIRECT_URI = "https://synth-ai.onrender.com/callback"
 SPOTIFY_SCOPE = "user-read-private user-read-email streaming user-modify-playback-state"
 
 
