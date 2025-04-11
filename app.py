@@ -21,14 +21,14 @@ load_dotenv()
 # Configure the Gemini API
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
-    api_key = "AIzaSyBk7Zhi2wdgVXXgR_KBnuXp9dW5RKmP1Lo"  # Use the key from your code if not in .env
+    api_key = "*your gemini api key*"  # Use the key from your code if not in .env
     logger.warning("Using hardcoded API key. Consider using a .env file for security.")
 
 genai.configure(api_key=api_key)
 
 # Spotify Configuration
-SPOTIFY_CLIENT_ID = "f989c6cee8fa443cb3ea026c401bcd1e"
-SPOTIFY_CLIENT_SECRET = "5a5c3eb0b5e945c1804b00763fc78759"
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET =  os.getenv("SPOTIFY_CLIENT_SECRET")
 SPOTIFY_REDIRECT_URI = "http://127.0.0.1:5000/callback"
 SPOTIFY_SCOPE = "user-read-private user-read-email streaming user-modify-playback-state"
 
