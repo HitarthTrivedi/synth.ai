@@ -443,7 +443,7 @@ h1 {
 .player-container {
     width: 90%;
     max-width: 500px;
-    background: linear-gradient(135deg, #1e1e2f, #191414);
+    background: linear-gradient(135deg, #1f103f, #39163a, #ff4b2b);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
