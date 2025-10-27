@@ -7,9 +7,6 @@ fetch('/token_info')
         // Store Spotify connection status in a variable accessible to the rest of the script
         window.isSpotifyConnected = isSpotifyConnected;
 
-        // Update Spotify button based on connection status
-        updateSpotifyButton(isSpotifyConnected);
-
         // Initialize the app
         initializeApp();
     })
@@ -17,30 +14,8 @@ fetch('/token_info')
         console.error('Error checking Spotify connection:', error);
         // Initialize app anyway, but mark as not connected
         window.isSpotifyConnected = false;
-        updateSpotifyButton(false);
         initializeApp();
     });
-
-function updateSpotifyButton(isConnected) {
-    const spotifyButton = document.querySelector('.spotify-button');
-    const spotifyAuthUrl = spotifyButton.getAttribute('href') || spotifyButton.getAttribute('data-auth-url');
-
-    if (isConnected) {
-        spotifyButton.innerHTML = '<i class="fab fa-spotify"></i> Connected to Spotify';
-        spotifyButton.classList.add('spotify-connected');
-        spotifyButton.style.cursor = 'default';
-        spotifyButton.style.pointerEvents = 'none';
-        spotifyButton.removeAttribute('href');
-    } else {
-        spotifyButton.innerHTML = '<i class="fab fa-spotify"></i> Connect to Spotify';
-        spotifyButton.classList.remove('spotify-connected');
-        spotifyButton.style.cursor = 'pointer';
-        spotifyButton.style.pointerEvents = 'auto';
-        if (spotifyAuthUrl && spotifyAuthUrl !== 'None') {
-            spotifyButton.setAttribute('href', spotifyAuthUrl);
-        }
-    }
-}
 
 function initializeApp() {
     const moodForm = document.querySelector('.mood-form');
@@ -51,12 +26,15 @@ function initializeApp() {
     const loader = document.getElementById('loader');
     const spotifyTracksContainer = document.getElementById('spotify-tracks-container');
     const spotifyTracksList = document.getElementById('spotify-tracks-list');
-
-    // Check if elements exist before proceeding
-    if (!moodForm || !responseContainer || !djResponse || !submitBtn || !newPlaylistBtn) {
-        console.error('Required elements not found');
-        return;
-    }
+    const spotifyNotConnected = document.getElementById('spotify-not-connected');
+    const playerModal = document.getElementById('player-modal');
+    const closePlayer = document.getElementById('close-player');
+    const trackImage = document.getElementById('track-image');
+    const trackName = document.getElementById('track-name');
+    const trackArtist = document.getElementById('track-artist');
+    const trackAlbum = document.getElementById('track-album');
+    const spotifyEmbed = document.getElementById('spotify-embed');
+    const openInSpotify = document.getElementById('open-in-spotify');
 
     // Check Spotify token on page load
     refreshSpotifyToken();
@@ -112,6 +90,7 @@ function initializeApp() {
             // Process and display DJ response
             const formattedResponse = formatDJResponse(data.response);
             djResponse.innerHTML = formattedResponse;
+            animateText(djResponse);
 
             // Handle Spotify tracks
             if (data.is_spotify_connected && data.spotify_tracks && data.spotify_tracks.length > 0) {
@@ -133,16 +112,49 @@ function initializeApp() {
         });
     });
 
-    // Format DJ response to make it readable
+    // Format DJ response to highlight songs
     function formatDJResponse(text) {
-        // Replace newlines with <br> tags for proper line breaks
-        let formatted = text.replace(/\n/g, '<br>');
+        // Split the response by lines to better handle different formatting
+        let lines = text.split('\n');
+        let formattedLines = [];
 
-        // Highlight song entries with the pipe format: Song Name | Artist Name
-        formatted = formatted.replace(/(\d+[\.\)]\s*)([^|<]+)\|([^<]+?)(<br>|$)/g,
-            '<div style="margin: 10px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 8px;">🎵 <strong>$2</strong> by <em>$3</em></div>');
+        // Process each line
+        for (let line of lines) {
+            // Match song patterns with improved regex that accounts for the pipe format
+            let songRegex = /(\d+[\.\)\s]+)?([^|\n]+)\s*\|\s*([^|\n]+)/i;
 
-        return formatted;
+            if (songRegex.test(line)) {
+                line = line.replace(songRegex,
+                    '🎵 $2 by $3 '
+                );
+            } else {
+                // Original regex for legacy format
+                let originalSongRegex = /(\d+[\.\)\s]+)([^-\–\—\by]+)([-\–\—\s]+|by\s+|feat\.\s+)([^,:.!?\n]+)/i;
+                if (originalSongRegex.test(line)) {
+                    line = line.replace(originalSongRegex,
+                        '🎵 $2 $3 $4'
+                    );
+                }
+            }
+
+            // Handle playlist headings
+            if (/\b(playlist|tracklist|tracks|songs|recommendations|vibes)[:!\s]/i.test(line)) {
+                line = line.replace(/\b(playlist|tracklist|tracks|songs|recommendations|vibes)[:!\s]/i,
+                    ' $1: '
+                );
+            }
+
+            // Handle DJ intros/outros with some style
+            if (/\b(yo|hey|sup|wassup|hello|hi|check|listen|enjoy|vibe)/i.test(line) &&
+                line.length < 150 &&
+                !songRegex.test(line)) {
+                line = 'dj-message:' + line ;
+            }
+
+            formattedLines.push(line);
+        }
+
+        return formattedLines.join('\n');
     }
 
     // Display Spotify tracks
@@ -216,6 +228,23 @@ function initializeApp() {
         playerModal.classList.add('hidden');
         spotifyEmbed.innerHTML = ''; // Stop playback
     });
+
+    // Text reveal animation
+    function animateText(element) {
+        const text = element.innerHTML;
+        element.innerHTML = '';
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 10);
+            }
+        }
+
+        typeWriter();
+    }
 
     // New playlist button event
     newPlaylistBtn.addEventListener('click', function() {
