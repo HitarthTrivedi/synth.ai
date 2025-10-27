@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -440,9 +441,11 @@
             </div>
             <h1>SYNTH.<span class="highlight">AI</span></h1>
             <p class="tagline">Get personalized Bollywood music recommendations based on your mood</p>
+            <!-- Replace the spotify-login-container section in your index.html with this: -->
+
             <div class="spotify-login-container">
-                <button class="spotify-button spotify-connected">
-                    <i class="fab fa-spotify"></i> Connected to Spotify
+                <button class="spotify-button" data-auth-url="{{ spotify_auth_url }}">
+                    <i class="fab fa-spotify"></i> Checking connection...
                 </button>
             </div>
             <div class="audio-wave">
