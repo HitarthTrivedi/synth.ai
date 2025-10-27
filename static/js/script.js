@@ -23,20 +23,22 @@ fetch('/token_info')
 
 function updateSpotifyButton(isConnected) {
     const spotifyButton = document.querySelector('.spotify-button');
-    const spotifyAuthUrl = spotifyButton.getAttribute('data-auth-url');
+    const spotifyAuthUrl = spotifyButton.getAttribute('href') || spotifyButton.getAttribute('data-auth-url');
 
     if (isConnected) {
         spotifyButton.innerHTML = '<i class="fab fa-spotify"></i> Connected to Spotify';
         spotifyButton.classList.add('spotify-connected');
         spotifyButton.style.cursor = 'default';
-        spotifyButton.onclick = null;
+        spotifyButton.style.pointerEvents = 'none';
+        spotifyButton.removeAttribute('href');
     } else {
         spotifyButton.innerHTML = '<i class="fab fa-spotify"></i> Connect to Spotify';
         spotifyButton.classList.remove('spotify-connected');
         spotifyButton.style.cursor = 'pointer';
-        spotifyButton.onclick = function() {
-            window.location.href = spotifyAuthUrl;
-        };
+        spotifyButton.style.pointerEvents = 'auto';
+        if (spotifyAuthUrl && spotifyAuthUrl !== 'None') {
+            spotifyButton.setAttribute('href', spotifyAuthUrl);
+        }
     }
 }
 
@@ -49,15 +51,12 @@ function initializeApp() {
     const loader = document.getElementById('loader');
     const spotifyTracksContainer = document.getElementById('spotify-tracks-container');
     const spotifyTracksList = document.getElementById('spotify-tracks-list');
-    const spotifyNotConnected = document.getElementById('spotify-not-connected');
-    const playerModal = document.getElementById('player-modal');
-    const closePlayer = document.getElementById('close-player');
-    const trackImage = document.getElementById('track-image');
-    const trackName = document.getElementById('track-name');
-    const trackArtist = document.getElementById('track-artist');
-    const trackAlbum = document.getElementById('track-album');
-    const spotifyEmbed = document.getElementById('spotify-embed');
-    const openInSpotify = document.getElementById('open-in-spotify');
+
+    // Check if elements exist before proceeding
+    if (!moodForm || !responseContainer || !djResponse || !submitBtn || !newPlaylistBtn) {
+        console.error('Required elements not found');
+        return;
+    }
 
     // Check Spotify token on page load
     refreshSpotifyToken();
