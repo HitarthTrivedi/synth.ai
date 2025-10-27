@@ -213,6 +213,35 @@
             background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
         }
+        .spotify-track {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        }
+
+        .spotify-track:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .spotify-track-info h4 {
+        color: #fff;
+        font-size: 1.2em;
+        margin-bottom: 5px;
+        font-weight: 400;
+        }
+
+        .spotify-track-info p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1em;
+        margin-bottom: 10px;
+        font-weight: 300;
+        }
 
         .form-group select {
             cursor: pointer;
@@ -443,10 +472,12 @@
             <p class="tagline">Get personalized Bollywood music recommendations based on your mood</p>
             <!-- Replace the spotify-login-container section in your index.html with this: -->
 
+            <!-- Replace the entire spotify-login-container section in your index.html with this: -->
+
             <div class="spotify-login-container">
-                <button class="spotify-button" data-auth-url="{{ spotify_auth_url }}">
+                <a href="{{ spotify_auth_url }}" class="spotify-button" id="spotify-connect-btn" data-auth-url="{{ spotify_auth_url }}">
                     <i class="fab fa-spotify"></i> Checking connection...
-                </button>
+                </a>
             </div>
             <div class="audio-wave">
                 <span></span>
