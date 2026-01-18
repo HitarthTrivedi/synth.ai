@@ -18,7 +18,8 @@ fetch('/token_info')
     });
 
 function initializeApp() {
-    const moodForm = document.querySelector('.mood-form');
+    const promptForm = document.getElementById('prompt-form');
+    const userPrompt = document.getElementById('user-prompt');
     const responseContainer = document.getElementById('response-container');
     const djResponse = document.getElementById('dj-response');
     const submitBtn = document.getElementById('submit-btn');
@@ -35,28 +36,38 @@ function initializeApp() {
     const trackAlbum = document.getElementById('track-album');
     const spotifyEmbed = document.getElementById('spotify-embed');
     const openInSpotify = document.getElementById('open-in-spotify');
+    const promptChips = document.querySelectorAll('.chip');
 
     // Check Spotify token on page load
     refreshSpotifyToken();
 
-    // Submit form event
-    submitBtn.addEventListener('click', function() {
-        // Check if at least some fields are filled
-        const timeOfDay = document.getElementById('time_of_day').value;
-        const highlight = document.getElementById('highlight').value;
-        const romanticMood = document.getElementById('romantic_mood').value;
-        const presentMoment = document.getElementById('present_moment').value;
-        const currentActivity = document.getElementById('current_activity').value;
-        const favoriteArtist = document.getElementById('favorite_artist').value;
-        const specificGenre = document.getElementById('specific_genre').value;
+    // Auto-resize textarea
+    userPrompt.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
 
-        if (!timeOfDay && !highlight && !presentMoment && !favoriteArtist) {
-            alert('Please fill at least some details about your day or mood to get better recommendations!');
+    // Handle prompt chips
+    promptChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            userPrompt.value = chip.getAttribute('data-prompt');
+            userPrompt.style.height = 'auto';
+            userPrompt.style.height = (userPrompt.scrollHeight) + 'px';
+            userPrompt.focus();
+        });
+    });
+
+    // Submit form event
+    submitBtn.addEventListener('click', function () {
+        const prompt = userPrompt.value.trim();
+
+        if (!prompt) {
+            alert('Please share your vibe or tell me how you\'re feeling!');
             return;
         }
 
         // Show loader and response container
-        moodForm.classList.add('hidden');
+        promptForm.classList.add('hidden');
         responseContainer.classList.remove('hidden');
         loader.style.display = 'flex';
         djResponse.innerHTML = '';
@@ -64,14 +75,9 @@ function initializeApp() {
         spotifyTracksContainer.classList.add('hidden');
 
         // Prepare data for sending to the server
+        // Sending everything as a single prompt field, backend's get_gemini_response will join values
         const data = {
-            time_of_day: timeOfDay,
-            highlight: highlight,
-            romantic_mood: romanticMood,
-            present_moment: presentMoment,
-            current_activity: currentActivity,
-            favorite_artist: favoriteArtist,
-            specific_genre: specificGenre
+            prompt: prompt
         };
 
         // Send request to the server
@@ -82,34 +88,42 @@ function initializeApp() {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => {
-            // Hide loader
-            loader.style.display = 'none';
+            .then(response => response.json())
+            .then(data => {
+                // Hide loader
+                loader.style.display = 'none';
 
-            // Process and display DJ response
-            const formattedResponse = formatDJResponse(data.response);
-            djResponse.innerHTML = formattedResponse;
-            animateText(djResponse);
+                // Process and display DJ response
+                const formattedResponse = formatDJResponse(data.response);
+                djResponse.innerHTML = formattedResponse;
+                animateText(djResponse);
 
-            // Handle Spotify tracks
-            if (data.is_spotify_connected && data.spotify_tracks && data.spotify_tracks.length > 0) {
-                spotifyTracksContainer.classList.remove('hidden');
-                spotifyNotConnected.classList.add('hidden');
+                // Handle Spotify tracks
+                if (data.is_spotify_connected && data.spotify_tracks && data.spotify_tracks.length > 0) {
+                    spotifyTracksContainer.classList.remove('hidden');
+                    spotifyNotConnected.classList.add('hidden');
 
-                // Display Spotify tracks
-                displaySpotifyTracks(data.spotify_tracks);
-            } else if (data.spotify_tracks && data.spotify_tracks.length > 0) {
-                // User has tracks but isn't connected
-                spotifyTracksContainer.classList.remove('hidden');
-                spotifyNotConnected.classList.remove('hidden');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            loader.style.display = 'none';
-            djResponse.innerHTML = "Oops! Looks like our DJ dropped the beat. Please try again later!";
-        });
+                    // Display Spotify tracks
+                    displaySpotifyTracks(data.spotify_tracks);
+                } else if (data.spotify_tracks && data.spotify_tracks.length > 0) {
+                    // User has tracks but isn't connected
+                    spotifyTracksContainer.classList.remove('hidden');
+                    spotifyNotConnected.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loader.style.display = 'none';
+                djResponse.innerHTML = "Oops! Looks like our DJ dropped the beat. Please try again later!";
+            });
+    });
+
+    // Handle Enter key for submission (Shift+Enter for newline)
+    userPrompt.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitBtn.click();
+        }
     });
 
     // Format DJ response to highlight songs
@@ -148,7 +162,7 @@ function initializeApp() {
             if (/\b(yo|hey|sup|wassup|hello|hi|check|listen|enjoy|vibe)/i.test(line) &&
                 line.length < 150 &&
                 !songRegex.test(line)) {
-                line = 'dj-message:' + line ;
+                line = 'dj-message:' + line;
             }
 
             formattedLines.push(line);
@@ -190,7 +204,7 @@ function initializeApp() {
 
         // Add event listeners to play buttons
         document.querySelectorAll('.play-track').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const trackId = this.getAttribute('data-track-id');
                 const trackNameValue = this.getAttribute('data-track-name');
                 const trackArtistValue = this.getAttribute('data-track-artist');
@@ -224,7 +238,7 @@ function initializeApp() {
     }
 
     // Close player modal
-    closePlayer.addEventListener('click', function() {
+    closePlayer.addEventListener('click', function () {
         playerModal.classList.add('hidden');
         spotifyEmbed.innerHTML = ''; // Stop playback
     });
@@ -247,9 +261,11 @@ function initializeApp() {
     }
 
     // New playlist button event
-    newPlaylistBtn.addEventListener('click', function() {
+    newPlaylistBtn.addEventListener('click', function () {
         responseContainer.classList.add('hidden');
-        moodForm.classList.remove('hidden');
+        promptForm.classList.remove('hidden');
+        userPrompt.value = '';
+        userPrompt.style.height = 'auto';
     });
 
     // Refresh Spotify token
@@ -259,22 +275,8 @@ function initializeApp() {
             .catch(error => console.error('Error refreshing token:', error));
     }
 
-    // Add dynamic styling
-    const inputs = document.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('active');
-        });
-
-        input.addEventListener('blur', function() {
-            if (this.value === '') {
-                this.parentElement.classList.remove('active');
-            }
-        });
-    });
-
     // Click outside the modal to close it
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         if (event.target === playerModal) {
             playerModal.classList.add('hidden');
             spotifyEmbed.innerHTML = ''; // Stop playback
