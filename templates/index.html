@@ -3,6 +3,7 @@
 
 
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +12,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="container">
         <header>
             <div class="logo-container">
-                <img src="{{ url_for('static', filename='images/synth-ai-logo.png') }}" alt="SYNTH.AI Logo" class="logo">
+                <img src="{{ url_for('static', filename='images/synth-ai-logo.png') }}" alt="SYNTH.AI Logo"
+                    class="logo">
             </div>
             <h1>SYNTH.<span class="highlight">AI</span></h1>
             <p class="tagline">Get personalized Bollywood music recommendations based on your mood</p>
             <div class="spotify-login-container">
                 {% if 'token_info' in session %}
-                    <button class="spotify-button spotify-connected">
-                        <i class="fab fa-spotify"></i> Connected to Spotify
-                    </button>
+                <button class="spotify-button spotify-connected">
+                    <i class="fab fa-spotify"></i> Connected to Spotify
+                </button>
                 {% else %}
-                    <a href="{{ spotify_auth_url }}" class="spotify-button">
-                        <i class="fab fa-spotify"></i> Connect with Spotify
-                    </a>
+                <a href="{{ spotify_auth_url }}" class="spotify-button">
+                    <i class="fab fa-spotify"></i> Connect with Spotify
+                </a>
                 {% endif %}
             </div>
             <div class="audio-wave">
@@ -41,67 +44,21 @@
             </div>
         </header>
 
-        <div class="mood-form">
-            <div class="form-section">
-                <h2>Tell me about your day</h2>
-                <div class="form-group">
-                    <label for="time_of_day">How's your day going?</label>
-                    <select id="time_of_day" name="time_of_day">
-                        <option value="">Select:</option>
-                        <option value="morning">Just started my day</option>
-                        <option value="good day">Having a good day</option>
-                        <option value="okay day">It's okay</option>
-                        <option value="bad day">Not so great</option>
-                        <option value="evening">Winding down</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="highlight">What was the highlight of your day?</label>
-                    <input type="text" id="highlight" name="highlight" placeholder="Tell me what made your day special...">
-                </div>
+        <div class="prompt-container" id="prompt-form">
+            <div class="prompt-wrapper">
+                <textarea id="user-prompt" placeholder="How's your day going? What's the vibe?" rows="1"></textarea>
+                <button id="submit-btn" class="send-btn">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
             </div>
 
-            <div class="form-section">
-                <h2>Your Current Mood</h2>
-                <div class="form-group">
-                    <label for="romantic_mood">Feeling romantic or thinking about someone special?</label>
-                    <input type="text" id="romantic_mood" name="romantic_mood" placeholder="Share your feelings...">
+            <div class="prompt-chips">
+                <div class="chip" data-prompt="I'm feeling nostalgic, play some 90s Bollywood hits">Nostalgic 90s</div>
+                <div class="chip" data-prompt="Need some high energy tracks for my workout">Gym Vibes</div>
+                <div class="chip" data-prompt="Having a romantic evening, suggest some soulful melodies">Romantic Night
                 </div>
-
-                <div class="form-group">
-                    <label for="present_moment">How would you describe this moment?</label>
-                    <input type="text" id="present_moment" name="present_moment" placeholder="Excited, relaxed, anxious...">
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2>Your Music Preferences</h2>
-                <div class="form-group">
-                    <label for="current_activity">What are you doing right now?</label>
-                    <input type="text" id="current_activity" name="current_activity" placeholder="Working, chilling, exercising...">
-                </div>
-
-                <div class="form-group">
-                    <label for="favorite_artist">Any favorite Bollywood artists?</label>
-                    <input type="text" id="favorite_artist" name="favorite_artist" placeholder="Arijit Singh, A.R. Rahman...">
-                </div>
-
-                <div class="form-group">
-                    <label for="specific_genre">Any specific genre or era you prefer?</label>
-                    <input type="text" id="specific_genre" name="specific_genre" placeholder="90s, Romantic, Party...">
-                </div>
-            </div>
-
-            <button id="submit-btn" class="pulse-btn">Get Your Playlist</button>
-            <div class="audio-wave">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
+                <div class="chip" data-prompt="Stressed at work, need some relaxing lo-fi Bollywood">Work Chill</div>
+                <div class="chip" data-prompt="Road trip with friends! Give me some bangers">Road Trip</div>
             </div>
         </div>
 
@@ -179,4 +136,5 @@
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>
